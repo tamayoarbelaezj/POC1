@@ -11,6 +11,9 @@ Está construido con [Google Agent Development Kit (ADK)](https://google.github.
 sobre **Gemini 2.5 Flash** en Vertex AI, consulta el core de pólizas a través de **Cloud
 Firestore** y se despliega como servicio en **Cloud Run**.
 
+> La documentación de gobierno de la iniciativa (formato *Documentación Modelos Analíticos
+> (ML) e iniciativas de IA*) está en [`docs/`](docs/README.md).
+
 ## Arquitectura
 
 ```mermaid
@@ -115,12 +118,36 @@ la publica en Artifact Registry y despliega en Cloud Run (privado, ingreso inter
 
 ```bash
 gcloud builds submit --config cloudbuild.yaml \
-  --substitutions=_PROJECT_ID=<proyecto>,_REGION=us-central1,_TAG=v1.0.0
+  --substitutions=_PROJECT_ID=<proyecto>,_REGION=us-central1,_TAG=v1.1.0
 ```
 
 La cuenta de servicio de ejecución requiere `roles/aiplatform.user`, `roles/datastore.viewer`
 y `roles/cloudtrace.agent`. El workflow [`.github/workflows/ci.yaml`](.github/workflows/ci.yaml)
 ejecuta lint y pruebas en cada push y pull request.
+
+## Pruebas de carga
+
+Script de k6 en [`load-tests/script.js`](load-tests/script.js) con escenarios `nominal`, `pico`,
+`estres` y `soak`:
+
+```bash
+k6 run -e SCENARIO=pico -e BASE_URL=<url> -e ID_TOKEN=$(gcloud auth print-identity-token) load-tests/script.js
+```
+
+Resultados y plan de acción en [`docs/04-pruebas-carga.md`](docs/04-pruebas-carga.md).
+
+## Documentación
+
+| Documento | Contenido |
+|---|---|
+| [docs/README.md](docs/README.md) | Índice y mapa del formato oficial |
+| [00-ficha-iniciativa.md](docs/00-ficha-iniciativa.md) | Ficha, criticidad y responsables |
+| [01-negocio.md](docs/01-negocio.md) | Problema, RACI, caso de negocio, integraciones y flujograma |
+| [02-datos.md](docs/02-datos.md) | Fuentes, transformación, calidad y guardrails |
+| [03-modelo.md](docs/03-modelo.md) | Evaluación de modelos, KPIs, monitoreo y sesgo |
+| [04-pruebas-carga.md](docs/04-pruebas-carga.md) | Pruebas de carga |
+| [05-riesgos.md](docs/05-riesgos.md) | Matriz de riesgos |
+| [06-aceptacion.md](docs/06-aceptacion.md) | Aprobación de negocio y revisión técnica |
 
 ## Versionamiento
 

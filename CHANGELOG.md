@@ -9,6 +9,19 @@ proyecto sigue [Versionamiento Semántico](https://semver.org/lang/es/).
 | Fecha | Versión | Autor | Descripción | Repositorio / tag |
 |---|---|---|---|---|
 | 2026-10-05 | 1.0.0 | Juan Tamayo (AI Lab) | Primera versión funcional del agente: herramientas, guardrails, API, pruebas y pipeline de despliegue. | [v1.0.0](https://github.com/tamayoarbelaezj/POC1/releases/tag/v1.0.0) |
+| 2026-10-05 | 1.1.0 | Juan Tamayo (AI Lab) | Documentación completa del formato de iniciativas de IA, pruebas de carga con k6, acta de aprobación de negocio y revisión técnica de pares. | [v1.1.0](https://github.com/tamayoarbelaezj/POC1/releases/tag/v1.1.0) |
+
+## [1.1.0] - 2026-10-05
+
+### Agregado
+- Documentación de gobierno en `docs/` según el formato *Documentación Modelos Analíticos (ML)
+  e iniciativas de IA*: ficha, negocio, datos, modelo, pruebas de carga, riesgos y aceptación.
+- Diccionario de datos, pitch, acta de aprobación y revisión técnica de pares en `docs/anexos/`.
+- Flujograma BPMN del proceso en draw.io (`docs/diagramas/flujo-proceso.drawio`).
+- Script de pruebas de carga con k6 (`load-tests/script.js`) y resumen de resultados.
+
+### Cambiado
+- README con sección de documentación y pruebas de carga.
 
 ## [1.0.0] - 2026-10-05
 
