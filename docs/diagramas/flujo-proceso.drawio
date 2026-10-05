@@ -1,0 +1,132 @@
+<mxfile host="app.diagrams.net" agent="diagrams.net" version="24.7.17">
+  <diagram id="flujo-agente-polizas" name="Flujo Asistente de Consulta de Pólizas">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Pool y carriles -->
+        <mxCell id="pool" value="Asistente de Consulta de Pólizas" style="swimlane;html=1;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;horizontal=0;startSize=30;horizontalStack=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1640" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="laneCliente" value="Cliente" style="swimlane;html=1;startSize=30;horizontal=0;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="pool">
+          <mxGeometry x="30" y="0" width="1610" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="laneAgente" value="Agente IA" style="swimlane;html=1;startSize=30;horizontal=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="pool">
+          <mxGeometry x="30" y="160" width="1610" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="laneFirestore" value="Firestore / Core de pólizas" style="swimlane;html=1;startSize=30;horizontal=0;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="pool">
+          <mxGeometry x="30" y="400" width="1610" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="laneAsesor" value="Asesor humano" style="swimlane;html=1;startSize=30;horizontal=0;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="pool">
+          <mxGeometry x="30" y="560" width="1610" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- Carril Cliente -->
+        <mxCell id="c_inicio" value="Inicio" style="shape=mxgraph.bpmn.event;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;perimeter=ellipsePerimeter;outlineConnect=0;aspect=fixed;outline=standard;symbol=general;" vertex="1" parent="laneCliente">
+          <mxGeometry x="60" y="60" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c_consulta" value="Escribe consulta (póliza, cobertura o siniestro)" style="shape=mxgraph.bpmn.task;html=1;whiteSpace=wrap;rectStyle=rounded;size=10;taskMarker=user;" vertex="1" parent="laneCliente">
+          <mxGeometry x="150" y="45" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="c_respuesta" value="Recibe respuesta" style="shape=mxgraph.bpmn.task;html=1;whiteSpace=wrap;rectStyle=rounded;size=10;taskMarker=abstract;" vertex="1" parent="laneCliente">
+          <mxGeometry x="1350" y="45" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="c_fin" value="Fin" style="shape=mxgraph.bpmn.event;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;perimeter=ellipsePerimeter;outlineConnect=0;aspect=fixed;outline=end;symbol=terminate2;" vertex="1" parent="laneCliente">
+          <mxGeometry x="1530" y="60" width="40" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Carril Agente IA -->
+        <mxCell id="a_guardrail" value="Guardrail de entrada: enmascara PII y detecta prompt injection" style="shape=mxgraph.bpmn.task;html=1;whiteSpace=wrap;rectStyle=rounded;size=10;taskMarker=script;" vertex="1" parent="laneAgente">
+          <mxGeometry x="330" y="20" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_gw_alcance" value="¿Inyección o fuera de alcance?" style="shape=mxgraph.bpmn.gateway2;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;align=center;perimeter=rhombusPerimeter;outlineConnect=0;outline=none;symbol=none;gwType=exclusive;" vertex="1" parent="laneAgente">
+          <mxGeometry x="530" y="35" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a_valida" value="Solicita / valida número (POL- o SIN- + 8 dígitos)" style="shape=mxgraph.bpmn.task;html=1;whiteSpace=wrap;rectStyle=rounded;size=10;taskMarker=abstract;" vertex="1" parent="laneAgente">
+          <mxGeometry x="640" y="20" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_alcance" value="Responde mensaje de alcance y ofrece asesor" style="shape=mxgraph.bpmn.task;html=1;whiteSpace=wrap;rectStyle=rounded;size=10;taskMarker=abstract;" vertex="1" parent="laneAgente">
+          <mxGeometry x="640" y="140" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="a_tool" value="Invoca herramienta (consultar_poliza, listar_coberturas, consultar_estado_siniestro)" style="shape=mxgraph.bpmn.task;html=1;whiteSpace=wrap;rectStyle=rounded;size=10;taskMarker=service;" vertex="1" parent="laneAgente">
+          <mxGeometry x="830" y="20" width="170" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_gw_status" value="¿status = success?" style="shape=mxgraph.bpmn.gateway2;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;align=center;perimeter=rhombusPerimeter;outlineConnect=0;outline=none;symbol=none;gwType=exclusive;" vertex="1" parent="laneAgente">
+          <mxGeometry x="1110" y="35" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a_respuesta" value="Genera respuesta y aplica guardrail de salida" style="shape=mxgraph.bpmn.task;html=1;whiteSpace=wrap;rectStyle=rounded;size=10;taskMarker=script;" vertex="1" parent="laneAgente">
+          <mxGeometry x="1200" y="20" width="150" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Carril Firestore / Core -->
+        <mxCell id="f_consulta" value="Consulta documento (polizas, polizas_productos, polizas_siniestros)" style="shape=mxgraph.bpmn.task;html=1;whiteSpace=wrap;rectStyle=rounded;size=10;taskMarker=service;" vertex="1" parent="laneFirestore">
+          <mxGeometry x="930" y="40" width="170" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="f_sync" value="Sincronización core → Firestore (cada 15 min)" style="shape=mxgraph.bpmn.task;html=1;whiteSpace=wrap;rectStyle=rounded;size=10;taskMarker=abstract;dashed=1;" vertex="1" parent="laneFirestore">
+          <mxGeometry x="640" y="40" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Carril Asesor humano -->
+        <mxCell id="h_atiende" value="Atiende caso escalado (error, inconformidad o solicitud del cliente)" style="shape=mxgraph.bpmn.task;html=1;whiteSpace=wrap;rectStyle=rounded;size=10;taskMarker=user;" vertex="1" parent="laneAsesor">
+          <mxGeometry x="1200" y="40" width="170" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="h_fin" value="Fin" style="shape=mxgraph.bpmn.event;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;perimeter=ellipsePerimeter;outlineConnect=0;aspect=fixed;outline=end;symbol=terminate2;" vertex="1" parent="laneAsesor">
+          <mxGeometry x="1530" y="60" width="40" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Flujos de secuencia -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="c_inicio" target="c_consulta">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="c_consulta" target="a_guardrail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="a_guardrail" target="a_gw_alcance">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="a_gw_alcance" target="a_valida">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="a_gw_alcance" target="a_alcance">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="a_valida" target="a_tool">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="a_tool" target="f_consulta">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="f_consulta" target="a_gw_status">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="a_gw_status" target="a_respuesta">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="a_respuesta" target="c_respuesta">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" value="No / cliente pide asesor" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="a_gw_status" target="h_atiende">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="a_alcance" target="c_respuesta">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="425" />
+              <mxPoint x="1490" y="425" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="c_respuesta" target="c_fin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="h_atiende" target="h_fin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" value="Réplica de datos" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;dashed=1;" edge="1" parent="1" source="f_sync" target="f_consulta">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
